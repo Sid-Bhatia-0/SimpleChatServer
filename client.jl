@@ -14,6 +14,7 @@ function start(port)
                 println(stdout, readline(socket))
             catch error
                 println(error)
+                close(socket)
                 break
             end
         end
