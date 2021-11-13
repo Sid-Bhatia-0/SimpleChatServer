@@ -7,13 +7,14 @@ function start(port)
         line = readline(stdin)
         if line == "quit"
             close(socket)
-            return nothing
+            break
         else
             try
                 println(socket, line)
                 println(stdout, readline(socket))
             catch error
                 println(error)
+                close(socket)
                 break
             end
         end
