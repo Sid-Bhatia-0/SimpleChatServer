@@ -3,20 +3,17 @@ import Sockets
 function start(port)
     socket = Sockets.connect(2001)
 
-    while true
+    @async while isopen(socket) && !eof(socket)
+        println(stdout, readline(socket))
+    end
+
+    while isopen(socket)
         line = readline(stdin)
-        if line == "quit"
+        try
+            println(socket, line)
+        catch error
+            println(error)
             close(socket)
-            break
-        else
-            try
-                println(socket, line)
-                println(stdout, readline(socket))
-            catch error
-                println(error)
-                close(socket)
-                break
-            end
         end
     end
 
