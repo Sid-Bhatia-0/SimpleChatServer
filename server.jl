@@ -1,5 +1,7 @@
 import Sockets
 
+const PORT = 50000
+
 function start(port)
     sockets = Sockets.TCPSocket[]
     server = Sockets.listen(port)
@@ -47,4 +49,4 @@ function start(port)
     return nothing
 end
 
-start(2001)
+start(PORT)
