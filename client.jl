@@ -2,7 +2,7 @@ import Sockets
 
 const PORT = 50000
 
-function start(port)
+function start_client(port)
     socket = Sockets.connect(port)
 
     @async while isopen(socket) && !eof(socket)
@@ -22,4 +22,4 @@ function start(port)
     return nothing
 end
 
-start(PORT)
+start_client(PORT)
