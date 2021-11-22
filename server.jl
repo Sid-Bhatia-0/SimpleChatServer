@@ -45,6 +45,7 @@ function start_server(port)
                     try_broadcast(room, "$(nickname): $(message)")
                 end
 
+                close(socket)
                 pop!(room, socket)
                 try_broadcast(room, "$(nickname) has left the room")
             else
@@ -52,7 +53,6 @@ function start_server(port)
                 close(socket)
             end
 
-            @assert !isopen(socket) "socket must not be open at this point!"
             println("socket_id $(socket_id) disconnected")
         end
     end
