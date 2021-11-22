@@ -1,50 +1,63 @@
 import Sockets
 
-function start(port)
-    sockets = Sockets.TCPSocket[]
-    server = Sockets.listen(port)
+const PORT = 50000
 
-    task = @async while true
-        socket = Sockets.accept(server)
-
-        i = findfirst(!isopen, sockets)
-
-        if isnothing(i)
-            push!(sockets, socket)
-            client_id = length(sockets)
-        else
-            sockets[i] = socket
-            client_id = i
-        end
-
-        println("New client: $(client_id)")
-
-        @async while isopen(socket)
-            try
-                line = readline(socket)
-                if line != ""
-                    println("Client $(client_id) wants to broadcast $(line)")
-                    for socket_receiver in sockets
-                        if isopen(socket_receiver)
-                            try
-                                println(socket_receiver, line)
-                            catch error
-                                println(error)
-                                close(socket_receiver)
-                            end
-                        end
-                    end
-                end
-            catch error
-                println(error)
-                close(socket_sender)
-            end
-        end
+function try_send(socket, message)
+    try
+        println(socket, message)
+    catch error
+        println(error)
+        close(socket)
     end
-
-    wait(task)
 
     return nothing
 end
 
-start(2001)
+function try_broadcast(room, message)
+    for socket in room
+        try_send(socket, message)
+    end
+
+    return nothing
+end
+
+function start_server(port)
+    room = Set{Sockets.TCPSocket}()
+
+    server = Sockets.listen(port)
+    println("server started listening")
+
+    while true
+        socket = Sockets.accept(server)
+        socket_id = hash(socket)
+        println("socket_id $(socket_id) accepted")
+
+        @async begin
+            try_send(socket, "Enter a nickname")
+            nickname = readline(socket)
+
+            if occursin(r"^[A-Za-z0-9_]{1,32}$", nickname)
+                push!(room, socket)
+                try_broadcast(room, "$(nickname) has entered the room")
+
+                while isopen(socket) && !eof(socket)
+                    message = readline(socket)
+                    try_broadcast(room, "$(nickname): $(message)")
+                end
+
+                close(socket)
+                pop!(room, socket)
+                try_broadcast(room, "$(nickname) has left the room")
+            else
+                try_send(socket, "ERROR: invalid nickname")
+                close(socket)
+            end
+
+            println("socket_id $(socket_id) disconnected")
+        end
+    end
+
+    return nothing
+end
+
+start_server(PORT)

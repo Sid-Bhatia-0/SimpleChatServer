@@ -1,7 +1,9 @@
 import Sockets
 
-function start(port)
-    socket = Sockets.connect(2001)
+const PORT = 50000
+
+function start_client(port)
+    socket = Sockets.connect(port)
 
     @async while isopen(socket) && !eof(socket)
         println(stdout, readline(socket))
@@ -20,4 +22,4 @@ function start(port)
     return nothing
 end
 
-start(2001)
+start_client(PORT)
