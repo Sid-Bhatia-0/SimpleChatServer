@@ -51,10 +51,10 @@ function start_server(port)
                 try_send(socket, "ERROR: invalid nickname")
                 close(socket)
             end
-        end
 
-        @assert !isopen(socket) "socket must not be open at this point!"
-        println("socket_id $(socket_id) disconnected")
+            @assert !isopen(socket) "socket must not be open at this point!"
+            println("socket_id $(socket_id) disconnected")
+        end
     end
 
     return nothing
