@@ -2,6 +2,17 @@ import Sockets
 
 const PORT = 50000
 
+function try_send(socket, message)
+    try
+        println(socket, message)
+    catch error
+        println(error)
+        close(socket)
+    end
+
+    return nothing
+end
+
 function start_client(port)
     socket = Sockets.connect(port)
 
@@ -10,13 +21,8 @@ function start_client(port)
     end
 
     while isopen(socket)
-        line = readline(stdin)
-        try
-            println(socket, line)
-        catch error
-            println(error)
-            close(socket)
-        end
+        message = readline(stdin)
+        try_send(socket, message)
     end
 
     return nothing
