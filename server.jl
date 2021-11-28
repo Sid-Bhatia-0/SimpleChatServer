@@ -40,7 +40,7 @@ function start_server(port)
                 push!(room, socket)
                 try_broadcast(room, "$(nickname) has entered the room")
 
-                while isopen(socket) && !eof(socket)
+                while !eof(socket)
                     message = readline(socket)
                     try_broadcast(room, "$(nickname): $(message)")
                 end

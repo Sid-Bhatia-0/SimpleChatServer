@@ -16,7 +16,7 @@ end
 function start_client(port)
     socket = Sockets.connect(port)
 
-    @async while isopen(socket) && !eof(socket)
+    @async while !eof(socket)
         println(stdout, readline(socket))
     end
 
