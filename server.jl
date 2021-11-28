@@ -6,7 +6,7 @@ function try_send(socket, message)
     try
         println(socket, message)
     catch error
-        println(error)
+        @error error
         close(socket)
     end
 
@@ -25,12 +25,12 @@ function start_server(port)
     room = Set{Sockets.TCPSocket}()
 
     server = Sockets.listen(port)
-    println("server started listening")
+    @info "server started listening"
 
     while true
         socket = Sockets.accept(server)
         socket_id = hash(socket)
-        println("socket_id $(socket_id) accepted")
+        @info "socket_id $(socket_id) accepted"
 
         @async begin
             try_send(socket, "Enter a nickname")
@@ -53,7 +53,7 @@ function start_server(port)
                 close(socket)
             end
 
-            println("socket_id $(socket_id) disconnected")
+            @info "socket_id $(socket_id) disconnected"
         end
     end
 

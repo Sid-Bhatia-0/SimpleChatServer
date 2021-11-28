@@ -6,7 +6,7 @@ function try_send(socket, message)
     try
         println(socket, message)
     catch error
-        println(error)
+        @error error
         close(socket)
     end
 
