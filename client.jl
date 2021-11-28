@@ -17,12 +17,11 @@ function start_client(port)
     socket = Sockets.connect(port)
 
     @async while !eof(socket)
-        println(stdout, readline(socket))
+        println(readline(socket))
     end
 
     while isopen(socket)
-        message = readline(stdin)
-        try_send(socket, message)
+        try_send(socket, readline())
     end
 
     return nothing
