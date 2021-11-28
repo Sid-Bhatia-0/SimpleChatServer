@@ -21,8 +21,7 @@ function start_client(port)
     end
 
     while isopen(socket)
-        message = readline()
-        try_send(socket, message)
+        try_send(socket, readline())
     end
 
     return nothing
