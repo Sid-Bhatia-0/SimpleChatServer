@@ -1,6 +1,7 @@
 import Sockets
 
-const PORT = 50000
+const SERVER_HOST = Sockets.localhost # Sockets.ip"127.0.0.1"
+const SERVER_PORT = 50000
 
 function try_send(socket, message)
     try
@@ -21,10 +22,10 @@ function try_broadcast(room, message)
     return nothing
 end
 
-function start_server(port)
+function start_server(server_host, server_port)
     room = Set{Sockets.TCPSocket}()
 
-    server = Sockets.listen(port)
+    server = Sockets.listen(server_host, server_port)
     @info "server started listening"
 
     while true
@@ -60,4 +61,4 @@ function start_server(port)
     return nothing
 end
 
-start_server(PORT)
+start_server(SERVER_HOST, SERVER_PORT)
