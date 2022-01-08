@@ -15,6 +15,8 @@ function try_send(socket, message)
 end
 
 function try_broadcast(room, message)
+    @info message
+
     for socket in room
         try_send(socket, message)
     end
@@ -32,8 +34,9 @@ function start_server(server_host, server_port)
 
     while true
         socket = Sockets.accept(server)
-        socket_id = hash(socket)
-        @info "socket_id $(socket_id) accepted"
+
+        peername = Sockets.getpeername(socket)
+        @info "socket accepted (peername = $(peername))"
 
         @async begin
             try_send(socket, "Enter a nickname")
@@ -66,7 +69,7 @@ function start_server(server_host, server_port)
                 close(socket)
             end
 
-            @info "socket_id $(socket_id) disconnected"
+            @info "socket disconnected (peername = $(peername))"
         end
     end
 
