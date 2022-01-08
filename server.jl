@@ -51,9 +51,15 @@ function start_server(server_host, server_port)
 
                 while !eof(socket)
                     message = readline(socket)
-                    broadcast_message = "$(nickname): $(message)"
-                    lock(room_lock) do
-                        try_broadcast(room, broadcast_message)
+                    if all(char -> isprint(char) && isascii(char), message)
+                        broadcast_message = "$(nickname): $(message)"
+                        lock(room_lock) do
+                            try_broadcast(room, broadcast_message)
+                        end
+                    else
+                        try_send(socket, "[ERROR: message must be composed only of printable ascii characters]")
+                        close(socket)
+                        break
                     end
                 end
 
