@@ -35,9 +35,8 @@ function start_server(server_host, server_port)
     while true
         socket = Sockets.accept(server)
 
-        sockname = Sockets.getsockname(socket)
         peername = Sockets.getpeername(socket)
-        @info "socket accepted, sockname = $(sockname), peername = $(peername)"
+        @info "socket accepted (peername = $(peername))"
 
         @async begin
             try_send(socket, "Enter a nickname")
@@ -70,7 +69,7 @@ function start_server(server_host, server_port)
                 close(socket)
             end
 
-            @info "socket disconnected, sockname = $(sockname), peername = $(peername)"
+            @info "socket disconnected (peername = $(peername))"
         end
     end
 
