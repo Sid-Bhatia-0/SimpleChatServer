@@ -57,6 +57,7 @@ function start_server(server_host, server_port)
                             try_broadcast(room, broadcast_message)
                         end
                     else
+                        @info "socket sent invalid message (peername = $(peername))"
                         try_send(socket, "[ERROR: message must be composed only of printable ascii characters]")
                         close(socket)
                         break
@@ -71,6 +72,7 @@ function start_server(server_host, server_port)
                     try_broadcast(room, user_exit_message)
                 end
             else
+                @info "socket sent invalid nickname (peername = $(peername))"
                 try_send(socket, "ERROR: invalid nickname")
                 close(socket)
             end
