@@ -43,16 +43,16 @@ function start_server(server_host, server_port)
             nickname = readline(socket)
 
             if occursin(r"^[A-Za-z0-9]{1,32}$", nickname)
-                new_user_message = "[$(nickname) has entered the room]"
+                user_entry_message = "[$(nickname) has entered the room]"
                 lock(room_lock) do
                     push!(room, socket)
-                    try_broadcast(room, new_user_message)
+                    try_broadcast(room, user_entry_message)
                 end
 
                 while !eof(socket)
-                    message = readline(socket)
-                    if all(char -> isprint(char) && isascii(char), message)
-                        broadcast_message = "$(nickname): $(message)"
+                    user_message = readline(socket)
+                    if all(char -> isprint(char) && isascii(char), user_message)
+                        broadcast_message = "$(nickname): $(user_message)"
                         lock(room_lock) do
                             try_broadcast(room, broadcast_message)
                         end
