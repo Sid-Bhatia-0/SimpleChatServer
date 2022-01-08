@@ -73,7 +73,7 @@ function start_server(server_host, server_port)
                 end
             else
                 @info "(peername = $(peername)) invalid nickname"
-                try_send(socket, "[ERROR: nickname must be between 1 to 32 characters in length (both inclusive) and composed only of a-z, A-Z, and 0-9 characters]")
+                try_send(socket, "[ERROR: nickname must be composed only of a-z, A-Z, and 0-9 and its length must be between 1 to 32 characters (both inclusive)]")
                 close(socket)
             end
 
