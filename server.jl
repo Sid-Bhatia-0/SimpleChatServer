@@ -15,6 +15,8 @@ function try_send(socket, message)
 end
 
 function try_broadcast(room, message)
+    @info message
+
     for socket in room
         try_send(socket, message)
     end
