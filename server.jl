@@ -50,9 +50,9 @@ function start_server(server_host, server_port)
                 end
 
                 while !eof(socket)
-                    message = readline(socket)
-                    if all(char -> isprint(char) && isascii(char), message)
-                        broadcast_message = "$(nickname): $(message)"
+                    user_message = readline(socket)
+                    if all(char -> isprint(char) && isascii(char), user_message)
+                        broadcast_message = "$(nickname): $(user_message)"
                         lock(room_lock) do
                             try_broadcast(room, broadcast_message)
                         end
