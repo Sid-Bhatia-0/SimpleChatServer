@@ -9,10 +9,10 @@ Follow these steps to test the chat server on you localhost:
 1. Clone the project
 
     ```
-    $ git clone https://github.com/Sid-Bhatia-0/ChatServer
+    $ git clone https://github.com/Sid-Bhatia-0/SimpleChatServer.git
     ```
 
-1. Go inside the project directory (`ChatServer`) and start the Julia REPL
+1. Go inside the project directory (`SimpleChatServer`) and start the Julia REPL
 
     ```
     $ julia
