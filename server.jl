@@ -25,6 +25,8 @@ end
 function start_server(server_host, server_port)
     room = Set{Sockets.TCPSocket}()
 
+    room_lock = ReentrantLock()
+
     server = Sockets.listen(server_host, server_port)
     @info "server started listening"
 
@@ -38,17 +40,27 @@ function start_server(server_host, server_port)
             nickname = readline(socket)
 
             if occursin(r"^[A-Za-z0-9_]{1,32}$", nickname)
-                push!(room, socket)
-                try_broadcast(room, "$(nickname) has entered the room")
+                new_user_message = "$(nickname) has entered the room"
+                lock(room_lock) do
+                    push!(room, socket)
+                    try_broadcast(room, new_user_message)
+                end
 
                 while !eof(socket)
                     message = readline(socket)
-                    try_broadcast(room, "$(nickname): $(message)")
+                    broadcast_message = "$(nickname): $(message)"
+                    lock(room_lock) do
+                        try_broadcast(room, broadcast_message)
+                    end
                 end
 
                 close(socket)
-                pop!(room, socket)
-                try_broadcast(room, "$(nickname) has left the room")
+
+                user_exit_message = "$(nickname) has left the room"
+                lock(room_lock) do
+                    pop!(room, socket)
+                    try_broadcast(room, user_exit_message)
+                end
             else
                 try_send(socket, "ERROR: invalid nickname")
                 close(socket)
