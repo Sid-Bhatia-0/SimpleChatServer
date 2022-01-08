@@ -40,6 +40,6 @@ Follow these steps to test the chat server on you localhost:
     $ julia --project=. client.jl
     ```
 
-    You will be prompted to enter a nickname. The nickname must match `r"^[A-Za-z0-9_]{1,32}$"` (it must be an ascii alphanumeric string between 1 and 32 characters in length (both inclusive), no spaces, can use `_`). For example, `99_client`.
+    You will be prompted to enter a nickname. The nickname must be composed only of a-z, A-Z, and 0-9, and its length must be between 1 to 32 characters (both inclusive).
 
 Clients may come and go, while the server will keep running. Press `Ctrl-c` to exit the processes.
