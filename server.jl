@@ -43,7 +43,7 @@ function start_server(server_host, server_port)
             nickname = readline(socket)
 
             if occursin(r"^[A-Za-z0-9]{1,32}$", nickname)
-                new_user_message = "$(nickname) has entered the room"
+                new_user_message = "[$(nickname) has entered the room]"
                 lock(room_lock) do
                     push!(room, socket)
                     try_broadcast(room, new_user_message)
@@ -66,7 +66,7 @@ function start_server(server_host, server_port)
 
                 close(socket)
 
-                user_exit_message = "$(nickname) has left the room"
+                user_exit_message = "[$(nickname) has left the room]"
                 lock(room_lock) do
                     pop!(room, socket)
                     try_broadcast(room, user_exit_message)
