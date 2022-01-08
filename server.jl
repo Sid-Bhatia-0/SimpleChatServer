@@ -42,7 +42,7 @@ function start_server(server_host, server_port)
             try_send(socket, "Enter a nickname")
             nickname = readline(socket)
 
-            if occursin(r"^[A-Za-z0-9_]{1,32}$", nickname)
+            if occursin(r"^[A-Za-z0-9]{1,32}$", nickname)
                 new_user_message = "$(nickname) has entered the room"
                 lock(room_lock) do
                     push!(room, socket)
