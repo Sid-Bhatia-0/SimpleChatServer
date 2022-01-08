@@ -36,7 +36,7 @@ function start_server(server_host, server_port)
         socket = Sockets.accept(server)
 
         peername = Sockets.getpeername(socket)
-        @info "socket accepted (peername = $(peername))"
+        @info "(peername = $(peername)) socket accepted"
 
         @async begin
             try_send(socket, "Enter a nickname")
@@ -57,7 +57,7 @@ function start_server(server_host, server_port)
                             try_broadcast(room, broadcast_message)
                         end
                     else
-                        @info "socket sent invalid message (peername = $(peername))"
+                        @info "(peername = $(peername)) invalid message"
                         try_send(socket, "[ERROR: message must be composed only of printable ascii characters]")
                         close(socket)
                         break
@@ -72,12 +72,12 @@ function start_server(server_host, server_port)
                     try_broadcast(room, user_exit_message)
                 end
             else
-                @info "socket sent invalid nickname (peername = $(peername))"
+                @info "(peername = $(peername)) invalid nickname"
                 try_send(socket, "[ERROR: nickname must be between 1 to 32 characters in length (both inclusive) and composed only of a-z, A-Z, and 0-9 characters]")
                 close(socket)
             end
 
-            @info "socket disconnected (peername = $(peername))"
+            @info "(peername = $(peername)) socket disconnected"
         end
     end
 
