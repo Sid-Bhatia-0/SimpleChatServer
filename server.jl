@@ -86,7 +86,7 @@ function start_server(server_host, server_port)
     while true
         socket = Sockets.accept(server)
 
-        @async handle_socket(room, room_lock, socket)
+        errormonitor(@async handle_socket(room, room_lock, socket))
     end
 
     return nothing
