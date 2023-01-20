@@ -24,6 +24,8 @@ function try_broadcast(room, message)
     return nothing
 end
 
+is_valid_nickname(nickname) = occursin(r"^[A-Za-z0-9]{1,32}$", nickname)
+
 function start_server(server_host, server_port)
     room = Set{Sockets.TCPSocket}()
 
@@ -42,7 +44,7 @@ function start_server(server_host, server_port)
             try_send(socket, "Enter a nickname")
             nickname = readline(socket)
 
-            if occursin(r"^[A-Za-z0-9]{1,32}$", nickname)
+            if is_valid_nickname(nickname)
                 user_entry_message = "[$(nickname) has entered the room]"
                 lock(room_lock) do
                     push!(room, socket)
