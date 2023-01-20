@@ -17,9 +17,11 @@ end
 function start_client(server_ip_address, server_port)
     socket = Sockets.connect(server_ip_address, server_port)
 
-    @async while !eof(socket)
-        println(readline(socket))
-    end
+    errormonitor(
+        @async while !eof(socket)
+            println(readline(socket))
+        end
+    )
 
     while isopen(socket)
         try_send(socket, readline())
