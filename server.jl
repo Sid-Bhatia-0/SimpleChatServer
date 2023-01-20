@@ -32,6 +32,7 @@ function handle_socket(room, room_lock, socket)
 
     try_send(socket, "Enter a nickname")
     nickname = readline(socket)
+    @info "Nickname entered" peername, nickname
 
     if is_valid_nickname(nickname)
         user_entry_message = "[$(nickname) has entered the room]"
