@@ -25,6 +25,7 @@ function try_broadcast(room, message)
 end
 
 is_valid_nickname(nickname) = occursin(r"^[A-Za-z0-9]{1,32}$", nickname)
+is_valid_message(message) = all(char -> isprint(char) && isascii(char), message)
 
 function start_server(server_host, server_port)
     room = Set{Sockets.TCPSocket}()
@@ -53,7 +54,7 @@ function start_server(server_host, server_port)
 
                 while !eof(socket)
                     user_message = readline(socket)
-                    if all(char -> isprint(char) && isascii(char), user_message)
+                    if is_valid_message(user_message)
                         broadcast_message = "$(nickname): $(user_message)"
                         lock(room_lock) do
                             try_broadcast(room, broadcast_message)
