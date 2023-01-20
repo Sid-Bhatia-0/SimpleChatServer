@@ -32,26 +32,28 @@ function handle_socket(room, room_lock, socket)
 
     try_send(socket, "Enter a nickname")
     nickname = readline(socket)
-    @info "Nickname entered" peername, nickname
+    @info "Nickname entered" peername nickname
 
     if is_valid_nickname(nickname)
         user_entry_message = "[$(nickname) has entered the room]"
         lock(room_lock) do
             push!(room, socket)
-            @info "Broadcasting message" user_entry_message
+            @info "Broadcasting user entry message" peername nickname message=user_entry_message
             try_broadcast(room, user_entry_message)
         end
 
         while !eof(socket)
-            user_message = readline(socket)
-            if is_valid_message(user_message)
-                user_broadcast_message = "$(nickname): $(user_message)"
+            chat_message = readline(socket)
+            @info "Chat message entered" peername nickname message=chat_message
+
+            if is_valid_message(chat_message)
+                chat_message_with_nickname = "$(nickname): $(chat_message)"
                 lock(room_lock) do
-                    @info "Broadcasting message" user_broadcast_message
-                    try_broadcast(room, user_broadcast_message)
+                    @info "Broadcasting chat message" peername nickname message=chat_message_with_nickname
+                    try_broadcast(room, chat_message_with_nickname)
                 end
             else
-                @info "Invalid message" peername, nickname, user_message
+                @info "Invalid chat message" peername nickname message=chat_message
                 try_send(socket, "[ERROR: message must be composed only of printable ascii characters]")
                 close(socket)
                 break
@@ -63,16 +65,16 @@ function handle_socket(room, room_lock, socket)
         user_exit_message = "[$(nickname) has left the room]"
         lock(room_lock) do
             pop!(room, socket)
-            @info "Broadcasting message" user_exit_message
+            @info "Broadcasting user exit message" peername nickname message=user_exit_message
             try_broadcast(room, user_exit_message)
         end
     else
-        @info "Invalid nickname" peername, nickname
+        @info "Invalid nickname" peername nickname
         try_send(socket, "[ERROR: nickname must be composed only of a-z, A-Z, and 0-9 and its length must be between 1 to 32 characters (both inclusive)]")
         close(socket)
     end
 
-    @info "Socket closed" peername, nickname
+    @info "Socket closed" peername nickname
 
     return nothing
 end
@@ -83,7 +85,7 @@ function start_server(server_host, server_port)
     room_lock = ReentrantLock()
 
     server = Sockets.listen(server_host, server_port)
-    @info "Server started listening" server_host, server_port
+    @info "Server started listening" server_host server_port
 
     while true
         socket = Sockets.accept(server)
