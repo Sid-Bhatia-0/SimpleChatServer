@@ -79,13 +79,13 @@ function handle_socket(room, room_lock, socket)
     return nothing
 end
 
-function start_server(server_host, server_port)
+function start_server(server_ip_address, server_port)
     room = Set{Sockets.TCPSocket}()
 
     room_lock = ReentrantLock()
 
-    server = Sockets.listen(server_host, server_port)
-    @info "Server started listening" server_host server_port
+    server = Sockets.listen(server_ip_address, server_port)
+    @info "Server started listening" server_ip_address server_port
 
     while true
         socket = Sockets.accept(server)

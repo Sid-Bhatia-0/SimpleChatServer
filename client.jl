@@ -14,8 +14,8 @@ function try_send(socket, message)
     return nothing
 end
 
-function start_client(server_host, server_port)
-    socket = Sockets.connect(server_host, server_port)
+function start_client(server_ip_address, server_port)
+    socket = Sockets.connect(server_ip_address, server_port)
 
     @async while !eof(socket)
         println(readline(socket))
