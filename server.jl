@@ -15,7 +15,7 @@ function try_send(socket, message)
 end
 
 function try_broadcast(room, message)
-    @info message
+    @info "Broadcasting message" message
 
     for socket in room
         try_send(socket, message)
@@ -30,7 +30,7 @@ is_valid_message(message) = all(char -> isprint(char) && isascii(char), message)
 
 function handle_socket(room, room_lock, socket)
     peername = Sockets.getpeername(socket)
-    @info "(peername = $(peername)) socket accepted"
+    @info "Socket accepted" peername
 
     try_send(socket, "Enter a nickname")
     nickname = readline(socket)
@@ -50,7 +50,7 @@ function handle_socket(room, room_lock, socket)
                     try_broadcast(room, broadcast_message)
                 end
             else
-                @info "(peername = $(peername)) invalid message"
+                @info "Invalid message" peername, nickname, user_message
                 try_send(socket, "[ERROR: message must be composed only of printable ascii characters]")
                 close(socket)
                 break
@@ -65,12 +65,12 @@ function handle_socket(room, room_lock, socket)
             try_broadcast(room, user_exit_message)
         end
     else
-        @info "(peername = $(peername)) invalid nickname"
+        @info "Invalid nickname" peername, nickname
         try_send(socket, "[ERROR: nickname must be composed only of a-z, A-Z, and 0-9 and its length must be between 1 to 32 characters (both inclusive)]")
         close(socket)
     end
 
-    @info "(peername = $(peername)) socket disconnected"
+    @info "Socket closed" peername, nickname
 
     return nothing
 end
@@ -81,7 +81,7 @@ function start_server(server_host, server_port)
     room_lock = ReentrantLock()
 
     server = Sockets.listen(server_host, server_port)
-    @info "server started listening"
+    @info "Server started listening" server_host, server_port
 
     while true
         socket = Sockets.accept(server)
