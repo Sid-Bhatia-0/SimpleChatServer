@@ -45,10 +45,10 @@ function handle_socket(room, room_lock, socket)
         while !eof(socket)
             user_message = readline(socket)
             if is_valid_message(user_message)
-                broadcast_message = "$(nickname): $(user_message)"
+                user_broadcast_message = "$(nickname): $(user_message)"
                 lock(room_lock) do
-                    @info "Broadcasting message" broadcast_message
-                    try_broadcast(room, broadcast_message)
+                    @info "Broadcasting message" user_broadcast_message
+                    try_broadcast(room, user_broadcast_message)
                 end
             else
                 @info "Invalid message" peername, nickname, user_message
