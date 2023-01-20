@@ -38,7 +38,7 @@ function handle_socket(room, room_lock, socket)
         user_entry_message = "[$(nickname) has entered the room]"
         lock(room_lock) do
             push!(room, socket)
-            @info "Broadcasting message" message
+            @info "Broadcasting message" user_entry_message
             try_broadcast(room, user_entry_message)
         end
 
@@ -47,7 +47,7 @@ function handle_socket(room, room_lock, socket)
             if is_valid_message(user_message)
                 broadcast_message = "$(nickname): $(user_message)"
                 lock(room_lock) do
-                    @info "Broadcasting message" message
+                    @info "Broadcasting message" broadcast_message
                     try_broadcast(room, broadcast_message)
                 end
             else
@@ -63,7 +63,7 @@ function handle_socket(room, room_lock, socket)
         user_exit_message = "[$(nickname) has left the room]"
         lock(room_lock) do
             pop!(room, socket)
-            @info "Broadcasting message" message
+            @info "Broadcasting message" user_exit_message
             try_broadcast(room, user_exit_message)
         end
     else
