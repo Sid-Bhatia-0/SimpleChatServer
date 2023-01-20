@@ -29,6 +29,9 @@ is_valid_nickname(nickname) = occursin(r"^[A-Za-z0-9]{1,32}$", nickname)
 is_valid_message(message) = all(char -> isprint(char) && isascii(char), message)
 
 function handle_socket(room, room_lock, socket)
+    peername = Sockets.getpeername(socket)
+    @info "(peername = $(peername)) socket accepted"
+
     try_send(socket, "Enter a nickname")
     nickname = readline(socket)
 
@@ -82,9 +85,6 @@ function start_server(server_host, server_port)
 
     while true
         socket = Sockets.accept(server)
-
-        peername = Sockets.getpeername(socket)
-        @info "(peername = $(peername)) socket accepted"
 
         @async handle_socket(room, room_lock, socket)
     end
