@@ -14,12 +14,11 @@ function try_send(socket, message)
     return nothing
 end
 
-function start_client(server_ip_address, server_port)
-    socket = Sockets.connect(server_ip_address, server_port)
-    sockname = Sockets.getsockname(socket)
-    peername = Sockets.getpeername(socket)
+function start_client(server_ip_address, server_port_number)
+    socket = Sockets.connect(server_ip_address, server_port_number)
+    client_ip_address, client_port_number = Sockets.getsockname(socket)
 
-    @info "Connected to server" sockname peername
+    @info "Connected to server" server_ip_address server_port_number client_ip_address client_port_number
 
     errormonitor(
         @async while !eof(socket)

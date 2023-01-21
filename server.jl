@@ -27,33 +27,34 @@ is_valid_nickname(nickname) = occursin(r"^[A-Za-z0-9]{1,32}$", nickname)
 is_valid_message(message) = all(char -> isprint(char) && isascii(char), message)
 
 function handle_socket(room, room_lock, socket)
-    peername = Sockets.getpeername(socket)
-    @info "Socket accepted" peername
+    server_ip_address, server_port_number = Sockets.getsockname(socket)
+    client_ip_address, client_port_number = Sockets.getpeername(socket)
+    @info "Socket accepted" client_ip_address client_port_number
 
     try_send(socket, "Enter a nickname")
     nickname = readline(socket)
-    @info "Nickname entered" peername nickname
+    @info "Nickname entered" client_ip_address client_port_number nickname
 
     if is_valid_nickname(nickname)
         user_entry_message = "[$(nickname) has entered the room]"
         lock(room_lock) do
             push!(room, socket)
-            @info "Broadcasting user entry message" peername nickname message=user_entry_message
+            @info "Broadcasting user entry message" client_ip_address client_port_number nickname message=user_entry_message
             try_broadcast(room, user_entry_message)
         end
 
         while !eof(socket)
             chat_message = readline(socket)
-            @info "Chat message entered" peername nickname message=chat_message
+            @info "Chat message entered" client_ip_address client_port_number nickname message=chat_message
 
             if is_valid_message(chat_message)
                 chat_message_with_nickname = "$(nickname): $(chat_message)"
                 lock(room_lock) do
-                    @info "Broadcasting chat message" peername nickname message=chat_message_with_nickname
+                    @info "Broadcasting chat message" client_ip_address client_port_number nickname message=chat_message_with_nickname
                     try_broadcast(room, chat_message_with_nickname)
                 end
             else
-                @info "Invalid chat message" peername nickname message=chat_message
+                @info "Invalid chat message" client_ip_address client_port_number nickname message=chat_message
                 try_send(socket, "[ERROR: message must be composed only of printable ascii characters]")
                 close(socket)
                 break
@@ -65,27 +66,27 @@ function handle_socket(room, room_lock, socket)
         user_exit_message = "[$(nickname) has left the room]"
         lock(room_lock) do
             pop!(room, socket)
-            @info "Broadcasting user exit message" peername nickname message=user_exit_message
+            @info "Broadcasting user exit message" client_ip_address client_port_number nickname message=user_exit_message
             try_broadcast(room, user_exit_message)
         end
     else
-        @info "Invalid nickname" peername nickname
+        @info "Invalid nickname" client_ip_address client_port_number nickname
         try_send(socket, "[ERROR: nickname must be composed only of a-z, A-Z, and 0-9 and its length must be between 1 to 32 characters (both inclusive)]")
         close(socket)
     end
 
-    @info "Socket closed" peername nickname
+    @info "Socket closed" client_ip_address client_port_number nickname
 
     return nothing
 end
 
-function start_server(server_ip_address, server_port)
+function start_server(server_ip_address, server_port_number)
     room = Set{Sockets.TCPSocket}()
 
     room_lock = ReentrantLock()
 
-    server = Sockets.listen(server_ip_address, server_port)
-    @info "Server started listening" server_ip_address server_port
+    server = Sockets.listen(server_ip_address, server_port_number)
+    @info "Server started listening" server_ip_address server_port_number
 
     while true
         socket = Sockets.accept(server)
