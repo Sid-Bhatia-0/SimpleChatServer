@@ -43,3 +43,7 @@ Follow these steps to test the chat server on you localhost:
     You will be prompted to enter a nickname. The nickname must be composed only of a-z, A-Z, and 0-9, and its length must be between 1 to 32 characters (both inclusive).
 
 Clients may come and go, while the server will keep running. Press `Ctrl-c` to exit the processes.
+
+Here is a screenshot
+
+<img src="https://user-images.githubusercontent.com/32610387/213835719-e1e5ddec-4594-47f5-9a34-901af0a6ddb6.png">
