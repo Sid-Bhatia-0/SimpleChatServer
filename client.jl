@@ -16,6 +16,10 @@ end
 
 function start_client(server_ip_address, server_port)
     socket = Sockets.connect(server_ip_address, server_port)
+    sockname = Sockets.getsockname(socket)
+    peername = Sockets.getpeername(socket)
+
+    @info "Connected to server" sockname peername
 
     errormonitor(
         @async while !eof(socket)
