@@ -1,7 +1,7 @@
 import Sockets
 
 const SERVER_IP_ADDRESS = Sockets.localhost # Sockets.ip"127.0.0.1"
-const SERVER_PORT = 50000
+const SERVER_PORT_NUMBER = 50000
 
 function try_send(socket, message)
     try
@@ -33,4 +33,4 @@ function start_client(server_ip_address, server_port_number)
     return nothing
 end
 
-start_client(SERVER_IP_ADDRESS, SERVER_PORT)
+start_client(SERVER_IP_ADDRESS, SERVER_PORT_NUMBER)
