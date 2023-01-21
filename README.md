@@ -1,4 +1,4 @@
-# ChatServer
+# SimpleChatServer
 
 This is a simple chat server written in Julia. It uses TCP sockets to communicate messages between a server and multiple clients.
 
