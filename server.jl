@@ -27,7 +27,6 @@ is_valid_nickname(nickname) = occursin(r"^[A-Za-z0-9]{1,32}$", nickname)
 is_valid_message(message) = all(char -> isprint(char) && isascii(char), message)
 
 function handle_socket(room, room_lock, socket)
-    server_ip_address, server_port_number = Sockets.getsockname(socket)
     peername = Sockets.getpeername(socket)
     client_ip_address = peername[1]
     client_port_number = Int(peername[2])
