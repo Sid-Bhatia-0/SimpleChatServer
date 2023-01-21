@@ -16,7 +16,9 @@ end
 
 function start_client(server_ip_address, server_port_number)
     socket = Sockets.connect(server_ip_address, server_port_number)
-    client_ip_address, client_port_number = Sockets.getsockname(socket)
+    sockname = Sockets.getsockname(socket)
+    client_ip_address = sockname[1]
+    client_port_number = Int(sockname[2])
 
     @info "Connected to server" server_ip_address server_port_number client_ip_address client_port_number
 

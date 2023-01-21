@@ -28,7 +28,9 @@ is_valid_message(message) = all(char -> isprint(char) && isascii(char), message)
 
 function handle_socket(room, room_lock, socket)
     server_ip_address, server_port_number = Sockets.getsockname(socket)
-    client_ip_address, client_port_number = Sockets.getpeername(socket)
+    peername = Sockets.getpeername(socket)
+    client_ip_address = peername[1]
+    client_port_number = Int(peername[2])
     @info "Socket accepted" client_ip_address client_port_number
 
     try_send(socket, "Enter a nickname")
