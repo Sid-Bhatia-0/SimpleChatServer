@@ -22,7 +22,7 @@ function start_client(server_ip_address, server_port_number)
 
     @info "Connected to server" server_ip_address server_port_number client_ip_address client_port_number
 
-    errormonitor(
+    t = errormonitor(
         @async while !eof(socket)
             println(readline(socket))
         end
@@ -31,6 +31,8 @@ function start_client(server_ip_address, server_port_number)
     while isopen(socket)
         try_send(socket, readline())
     end
+
+    wait(t)
 
     return nothing
 end
