@@ -62,8 +62,6 @@ function handle_socket(room, room_lock, socket)
             end
         end
 
-        close(socket)
-
         user_exit_message = "[$(nickname) has left the room]"
         lock(room_lock) do
             pop!(room, socket)
