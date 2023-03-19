@@ -10,16 +10,12 @@ function try_send(socket, message)
         @error error
         close(socket)
     end
-
-    return nothing
 end
 
 function try_broadcast(room, message)
     for socket in room
         try_send(socket, message)
     end
-
-    return nothing
 end
 
 is_valid_nickname(nickname) = occursin(r"^[A-Za-z0-9]{1,32}$", nickname)
@@ -75,8 +71,6 @@ function handle_socket(room, room_lock, socket)
     end
 
     @info "Socket closed" client_ip_address client_port_number nickname
-
-    return nothing
 end
 
 function start_server(server_ip_address, server_port_number)
@@ -92,8 +86,6 @@ function start_server(server_ip_address, server_port_number)
 
         errormonitor(@async handle_socket(room, room_lock, socket))
     end
-
-    return nothing
 end
 
 start_server(SERVER_IP_ADDRESS, SERVER_PORT_NUMBER)

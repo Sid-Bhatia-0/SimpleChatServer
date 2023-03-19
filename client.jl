@@ -10,8 +10,6 @@ function try_send(socket, message)
         @error error
         close(socket)
     end
-
-    return nothing
 end
 
 function start_client(server_ip_address, server_port_number)
@@ -33,8 +31,6 @@ function start_client(server_ip_address, server_port_number)
     end
 
     wait(t)
-
-    return nothing
 end
 
 start_client(SERVER_IP_ADDRESS, SERVER_PORT_NUMBER)
